@@ -22,7 +22,7 @@ const signin_post = (req, res) => {
 }
 
 
-// retrive user
+
 const get_all_user = (req, res) => {
 }
 const get_user = (req, res) => {
