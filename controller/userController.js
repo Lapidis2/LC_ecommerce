@@ -6,17 +6,18 @@ const nodemailler = require('nodemailer');
 const crypto = require('crypto');
 
 // Controller for handling signup form submission
-const signup_post = (req, res) => {
+const signup_post =async (req, res) => {
     const { name, email, password } = req.body;
     const newUser = {
-        name: name,
+        rname: name,
         email: email,
         password: password 
     }
 
     console.log(newUser); 
-
+  await newUser.save()
     res.redirect('/signin'); 
+}
 const signin_post = (req, res) => {
 }
 
@@ -30,9 +31,9 @@ const delete_user = (req, res) => {
 }
 
 module.exports = {
-    signin_get,
+  
     signin_post,
-    signup_get,
+    
     signup_post,
     get_all_user,
     get_user,
