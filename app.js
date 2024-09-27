@@ -1,24 +1,24 @@
-const express = require('express');
-const router = require('./routes/userRouter');
+require('dotenv').config();
+const express = require("express");
+const router = require("./routes/userRouter");
+const dbConfig = require('./dbConfig')
 const app = express();
 
-// Setting up view engine
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 
 // Middleware
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // Route to render the dashboard
-app.get('/dashboard', (req, res) => {
-  res.render('dashboard');
+app.get("/", (req, res) => {
+  res.render("dashboard");
 });
 
-// Use userRouter for user-related routes
-app.use('/', router);
+app.use("/", router);
 
 // Start the server
-const PORT = 5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server is listening on port: http://localhost:${PORT}`);
 });

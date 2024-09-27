@@ -8,17 +8,17 @@
     email:{
         type: String,
         require: true,
-        unique: true,
+        // unique: true,
         lowercase:true
     },
     password:{
         type: String,
         require: true,
-        unique: true
+        // unique: true
     },
     role:{
         type: String,
-        default: guest
+        default: 'guest'
     },
     createdAt:{
         type: Date,
