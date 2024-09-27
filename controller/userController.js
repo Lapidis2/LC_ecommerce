@@ -11,7 +11,8 @@ const signup_post =async (req, res) => {
     const newUser = {
         rname: name,
         email: email,
-        password: password 
+        password: password,
+        role:'admin'
     }
 
     console.log(newUser); 
@@ -22,7 +23,7 @@ const signin_post = (req, res) => {
 }
 
 
-// retrive user
+
 const get_all_user = (req, res) => {
 }
 const get_user = (req, res) => {
