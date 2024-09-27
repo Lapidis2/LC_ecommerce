@@ -8,14 +8,20 @@ const crypto = require('crypto');
 // Controller for handling signup form submission
 const signup_post =async (req, res) => {
     const { name, email, password } = req.body;
+    const hashPassword = bcrypt.hash(password,11);
     const newUser = {
         rname: name,
         email: email,
-        password: password,
-        role:'admin'
+
+        password: hashPassword 
+    }
+  
+    console.log(newUser);
+        
+   
     }
 
-    console.log(newUser); 
+  
   await newUser.save()
     res.redirect('/signin'); 
 }
