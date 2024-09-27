@@ -11,7 +11,8 @@ const signup_post =async (req, res) => {
     const newUser = {
         rname: name,
         email: email,
-        password: password 
+        password: password,
+        role:'admin'
     }
 
     console.log(newUser); 
