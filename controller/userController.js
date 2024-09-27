@@ -10,21 +10,21 @@ const signup_post =async (req, res) => {
     const { name, email, password } = req.body;
     const hashPassword = bcrypt.hash(password,11);
     const newUser = {
-        rname: name,
+        name: name,
         email: email,
 
         password: hashPassword 
     }
   
     console.log(newUser);
-        
+          await newUser.save()
+    res.redirect('/signin'); 
    
     }
 
   
-  await newUser.save()
-    res.redirect('/signin'); 
-}
+
+
 const signin_post = (req, res) => {
 }
 
