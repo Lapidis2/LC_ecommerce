@@ -18,7 +18,7 @@
     },
     role:{
         type: String,
-        default: guest
+        default: 'guest'
     },
     createdAt:{
         type: Date,

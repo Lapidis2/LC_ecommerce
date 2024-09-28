@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const nodemailler = require('nodemailer');
 const crypto = require('crypto');
 
-// Controller for handling signup form submission
 const signup_post =async (req, res) => {
     const { name, email, password } = req.body;
     const hashPassword = bcrypt.hash(password,11);
