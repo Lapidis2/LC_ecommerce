@@ -22,7 +22,7 @@ const signup_post = async(req, res) => {
     const token = await jwt.sign({ user }, process.env.SCRET_KEY, {
         expiresIn: '1hr'
     });
-    res.json({ mesage: "User registration successful", user, token });
+    res.json({ mesage: "User registration successful", user, token })
 };
 
 const signin_post = (req, res) => {}
