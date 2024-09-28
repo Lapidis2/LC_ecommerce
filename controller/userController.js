@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailler = require('nodemailer');
 const crypto = require('crypto');
+const { use } = require('../routes/userRouter');
 
 // Controller for handling signup form submission
 const signup_post = async(req, res) => {
@@ -12,15 +13,19 @@ const signup_post = async(req, res) => {
     const newUser = {
         name: name,
         email: email,
-        password: hashPassword
+        password: hashedPassword
 }
     console.log(newUser);
-          await newUser.save()
-    res.redirect('/signin'); 
+    const user = await User.create(newUser);
+    await user.save()
+    res.status(200).json(user)
 }
+
 const signin_post = (req, res) => {
 }
-const get_all_user = (req, res) => {
+const get_all_user =  async (req, res) => {
+    const user = await User.find();
+    res.status(201).json(user);
 }
 const get_user = (req, res) => {
 }

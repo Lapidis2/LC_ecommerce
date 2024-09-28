@@ -8,7 +8,7 @@ const {
 } = require("../controller/userController");
 
 // Signup routes
-router.get("/signup", get_all_user); 
+router.get("/get-users", get_all_user); 
 router.post("/signup", signup_post); // Corrected from /sigup to /signup
 
 // Signin routes
