@@ -3,30 +3,69 @@ require('dotenv').config();
 const User = require('../modal/userModal');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const nodemailler = require('nodemailer');
+const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const { error } = require('console');
 
 const signup_post = async(req, res) => {
-    const { name, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const existUser = await User.findOne({ email });
-    if (existUser) {
-        return res.json({ message: "user already exist" });
-    }
-    const newUser = {
-        name: name,
-        email: email,
+    try {
+        const { name, email, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const existUser = await User.findOne({ email });
+        if (existUser) {
+            return res.json({ message: "user already exist" });
+        }
+        const newUser = {
+            name: name,
+            email: email,
+            password: hashedPassword,
+            isConfirmed: false,
+            confirmToken: crypto.randomBytes(20).toString("hex"),
+        };
+        const user = await User.create(newUser);
+        console.log(newUser);
+        await user.save();
 
-        password: hashedPassword
-    }
-    const user = await User.create(newUser)
-    console.log(newUser);
-    await user.save();
+        const token = await jwt.sign({ user }, process.env.SCRET_KEY, {
+            expiresIn: "1hr",
+        });
 
-    const token = await jwt.sign({ user }, process.env.SCRET_KEY, {
-        expiresIn: '1hr'
-    });
-    res.json({ mesage: "User registration successful", user, token })
+        const transporter = nodemailer.createTransport({
+            service: "Gmail",
+            auth: {
+                user: process.env.Admin_email,
+                pass: process.env.admin_psswd,
+            },
+        });
+
+        const confirmLink = `http://${req.headers.host}/confirm/${user.confirmationToken}`;
+
+        const response = await transporter.sendMail({
+            from: process.env.Admin_email,
+            to: email,
+            subject: "Confirmation of email ",
+            html: `<p>Dear ${name},</p>
+                <p>Thank you for registering to our website.</p>
+                <p>Please click <a href='${confirmLink}'>Here</a>To confirm your account.</p>
+                `,
+        });
+        if (response) {
+            return res
+                .status(200)
+                .send({
+                    mesage: "user regisetered success full.Please check your email to confirm",
+                    user,
+                    token
+                });
+        } else {
+            throw new error("failed to send confirmation token", error);
+        }
+
+    } catch (error) {
+        res.status(500).json({ message: error.message || 'Failed to sign up' });
+
+    }
+
 };
 
 const signin_post = (req, res) => {}
