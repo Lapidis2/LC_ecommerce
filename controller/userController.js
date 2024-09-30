@@ -1,11 +1,12 @@
 // @ts-nocheck
-require('dotenv').config();
-const User = require('../modal/userModal');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const crypto = require('crypto');
-const { error } = require('console');
+require("dotenv").config();
+const User = require("../modal/userModal");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const nodemailler = require("nodemailer");
+const crypto = require("crypto");
+const authMiddleware = require('../middleware/AuthUser');
+
 
 const signup_post = async(req, res) => {
     try {
@@ -67,9 +68,54 @@ const signup_post = async(req, res) => {
     }
 
 };
+// login Route
+const signin_post = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-const get_all_user = (req, res) => {}
-const get_user = (req, res) => {}
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Please provide email and password" });
+    }
+    // Check if user exists
+    const user = await User.findOne({email});
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    // Compare provided password with stored hashed password
+    const isMatch = await bcrypt.compare(password,user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "incorrect password"});
+    }
+
+    // Create a JWT token
+    const token = await jwt.sign({ userId: user._id }, process.env.SCRET_KEY, {
+      expiresIn: "1h",
+    });
+    res.json({message:'login successful',user,token})
+  } catch (error) {
+    res.json({ message: "Internal server error"},{error:error.mesage});
+  }
+};
+//get all user
+const get_all_user = async (req, res) => {
+  const users = await User.find();
+  res.status(200).json(users)
+};
+//update user
+const update_user = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const {name, email} = req.body;
+    console.log(id)
+
+
+
+
+
+
 const delete_user = async(req, res) => {
     try {
         const { userId } = req.params;
@@ -84,10 +130,27 @@ const delete_user = async(req, res) => {
     }
 }
 
-module.exports = {
 
-    signup_post,
-    get_all_user,
-    get_user,
-    delete_user
-}
+
+
+   const updateUser = await User.findByIdAndUpdate(id,{name,email},{new:true});
+  console.log(updateUser)
+   
+   res.status(200).json({ message: "User updated successfully", updateUser });
+  }
+   catch (error) {
+    res.json({ message: "Internal server error"},error); 
+  }
+};
+const get_user = (req, res) => {};
+
+
+module.exports = {
+  signin_post,
+  signup_post,
+  update_user,
+  get_all_user,
+  get_user,
+  delete_user,
+};
+
