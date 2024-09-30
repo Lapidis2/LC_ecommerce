@@ -68,13 +68,24 @@ const signup_post = async(req, res) => {
 
 };
 
-const signin_post = (req, res) => {}
 const get_all_user = (req, res) => {}
 const get_user = (req, res) => {}
-const delete_user = (req, res) => {}
+const delete_user = async(req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findByIdAndDelete(userId)
+
+        if (!user) {
+            return res.status(402).send({ mesage: 'User not found' })
+        }
+        return res.status(200).send({ message: 'User deleted successfull' })
+    } catch (error) {
+        res.status(500).send({ message: 'internal server error', error })
+    }
+}
 
 module.exports = {
-    signin_post,
+
     signup_post,
     get_all_user,
     get_user,

@@ -1,18 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const {
-  signin_post,
-  signup_post,
-  get_user,
-  get_all_user,
+
+    signup_post,
+    get_user,
+    get_all_user,
+    delete_user
 } = require("../controller/userController");
-
-// Signup routes
-router.get("/signup", get_all_user); 
-router.post("/signup", signup_post); // Corrected from /sigup to /signup
-
-// Signin routes
+router.get("/signup", get_all_user);
+router.post("/signup", signup_post);
 router.get("/", get_user);
-router.post("/signin", signin_post);
 
+router.delete("/deleteUser/:userId", delete_user)
 module.exports = router;
