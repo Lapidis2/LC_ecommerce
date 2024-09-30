@@ -9,6 +9,10 @@ const crypto = require('crypto');
 const signup_post = async(req, res) => {
     const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
+    const existUser = await User.findOne({ email });
+    if (existUser) {
+        return res.json({ message: "user already exist" });
+    }
     const newUser = {
         name: name,
         email: email,
