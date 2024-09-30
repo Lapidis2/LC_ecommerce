@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require('../middleware/AuthUser');
 const {
+
   signin_post,
   signup_post,
   get_user,
@@ -18,4 +19,5 @@ router.post("/signup", signup_post); // Corrected from /sigup to /signup
 router.get("/get-user/:id", get_user);
 router.post("/signin", signin_post);
 
+router.delete("/deleteUser/:userId", delete_user)
 module.exports = router;

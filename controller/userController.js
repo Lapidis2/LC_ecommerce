@@ -115,6 +115,24 @@ const update_user = async (req, res) => {
 
 
 
+
+const delete_user = async(req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findByIdAndDelete(userId)
+
+        if (!user) {
+            return res.status(402).send({ mesage: 'User not found' })
+        }
+        return res.status(200).send({ message: 'User deleted successfull' })
+    } catch (error) {
+        res.status(500).send({ message: 'internal server error', error })
+    }
+}
+
+
+
+
    const updateUser = await User.findByIdAndUpdate(id,{name,email},{new:true});
   console.log(updateUser)
    
@@ -125,7 +143,7 @@ const update_user = async (req, res) => {
   }
 };
 const get_user = (req, res) => {};
-const delete_user = (req, res) => {};
+
 
 module.exports = {
   signin_post,
@@ -135,3 +153,4 @@ module.exports = {
   get_user,
   delete_user,
 };
+
