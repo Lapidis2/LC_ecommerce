@@ -138,7 +138,14 @@ const delete_user = async(req, res) => {
 };
 
 
-const get_user = (req, res) => {};
+const get_user = async (req, res) => {
+    const {id} = req.params;
+    const user = await User.findOne(id)
+
+    console.log(user);
+    
+    
+};
 
 
 module.exports = {
