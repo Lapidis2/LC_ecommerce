@@ -101,12 +101,13 @@ const signin_post = async(req, res) => {
 //get all user
 const get_all_user = async(req, res) => {
     const users = await User.find();
-    if (!users) {
+    if (!users || users.length == 0) {
         res.status(404).json({ message: "NO user found" })
     }
     res.status(200).json({
-        message: "all registered users "
-    }, users)
+        message: "all registered users ",
+        users
+    })
 };
 const update_user = async(req, res) => {
     try {
@@ -128,11 +129,11 @@ const delete_user = async(req, res) => {
         const user = await User.findByIdAndDelete(userId);
 
         if (!user) {
-            return res.status(402).send({ mesage: "User not found" });
+            return res.status(400).json({ mesage: "User not found" });
         }
-        return res.status(200).send({ message: "User deleted successfull" });
+        return res.status(200).json({ message: "User deleted successfull" });
     } catch (error) {
-        res.status(500).send({ message: "internal server error", error });
+        res.status(500).json({ message: "internal server error", error });
     }
 };
 
