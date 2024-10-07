@@ -101,19 +101,18 @@ const signin_post = async(req, res) => {
 //get all user
 const get_all_user = async(req, res) => {
     const users = await User.find();
-    res.status(200).json(users)
+    if (!users) {
+        res.status(404).json({ message: "NO user found" })
+    }
+    res.status(200).json({
+        message: "all registered users "
+    }, users)
 };
-//update user
 const update_user = async(req, res) => {
     try {
         const id = req.params.id;
         const { name, email } = req.body;
         console.log(id)
-
-
-
-
-
         const updateUser = await User.findByIdAndUpdate(id, { name, email }, { new: true });
         console.log(updateUser)
 
